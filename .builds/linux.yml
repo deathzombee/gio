@@ -36,9 +36,9 @@ sources:
  - https://git.sr.ht/~eliasnaur/gio
 environment:
  PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig/:/usr/lib/i386-linux-gnu/pkgconfig/
- PATH: /home/build/sdk/go/bin:/usr/bin:/home/build/go/bin:/home/build/android/tools/bin
+ PATH: /home/build/sdk/go/bin:/usr/bin:/home/build/go/bin:/home/build/android/cmdline-tools/latest/bin
  ANDROID_SDK_ROOT: /home/build/android
- android_sdk_tools_zip: sdk-tools-linux-3859397.zip
+ android_cmdline_tools_zip: commandlinetools-linux-11076708_latest.zip
  android_ndk_zip: android-ndk-r20-linux-x86_64.zip
  github_mirror: git@github.com:gioui/gio
 secrets:
@@ -73,15 +73,16 @@ tasks:
      CGO_ENABLED=1 GOARCH=386 go test ./...
      GOOS=windows go test -exec=wine ./...
      GOOS=js GOARCH=wasm go build -o /dev/null ./...
- - install_jdk8: |
-     curl -so jdk.deb "https://cdn.azul.com/zulu/bin/zulu8.42.0.21-ca-jdk8.0.232-linux_amd64.deb"
+ - install_jdk17: |
+     curl -so jdk.deb "https://cdn.azul.com/zulu/bin/zulu17.54.21-ca-jdk17.0.13-linux_amd64.deb"
      sudo apt-get -qq install -y -f ./jdk.deb
  - install_android: |
-     mkdir android
+     mkdir -p android/cmdline-tools
      cd android
-     curl -so sdk-tools.zip https://dl.google.com/android/repository/$android_sdk_tools_zip
-     unzip -q sdk-tools.zip
-     rm sdk-tools.zip
+     curl -so cmdline-tools.zip https://dl.google.com/android/repository/$android_cmdline_tools_zip
+     unzip -q cmdline-tools.zip -d cmdline-tools
+     rm cmdline-tools.zip
+     mv cmdline-tools/cmdline-tools cmdline-tools/latest
      curl -so ndk.zip https://dl.google.com/android/repository/$android_ndk_zip
      unzip -q ndk.zip
      rm ndk.zip
