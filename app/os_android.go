@@ -822,6 +822,9 @@ func (w *window) setVisible(env *C.JNIEnv) {
 	w.visible = true
 	w.sendConfigEvent()
 	w.draw(env, true)
+	// Request an additional frame to ensure the app has a chance to render
+	// initial content even if it hasn't explicitly requested animation.
+	callVoidMethod(env, w.view, gioView.postFrameCallback)
 }
 
 func (w *window) sendConfigEvent() {
