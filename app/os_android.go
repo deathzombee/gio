@@ -823,7 +823,8 @@ func (w *window) setVisible(env *C.JNIEnv) {
 	w.sendConfigEvent()
 	w.draw(env, true)
 	// Request an additional frame to ensure the app has a chance to render
-	// initial content even if it hasn't explicitly requested animation.
+	// initial content. Without this, apps that don't explicitly call SetAnimating(true)
+	// or Invalidate() would show a black screen after the initial surface setup.
 	callVoidMethod(env, w.view, gioView.postFrameCallback)
 }
 
